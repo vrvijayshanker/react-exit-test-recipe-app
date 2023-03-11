@@ -1,6 +1,7 @@
 const express = require ('express')
 const mongoose = require ('mongoose')
 const cors = require('cors');
+const path = require('path')
 
 const app = express()
 
@@ -72,31 +73,6 @@ app.patch("/update/:_id", async (req, res) => {
         res.send(error.message);
     }
 
-    
-
-    //     const edited = await Recipe.findByIdAndUpdate(id,req.body);
-    // try{
-    //     const {id} = req.params;
-    //     const edited = await Recipe.findByIdAndUpdate(id,req.body);
-    //     if(!edited){
-    //         return res.status(404).json({message: `Can't find Recipe with ID ${id}`})
-    //     }
-    //     else{
-    //         const updatedRecipe = await Recipe.findById(id);
-    //         res.status(200).json(editedRecipe);
-    //     }
-        
-    // }
-    // catch (error) {
-    //     res.status(500).json({message: error.message})
-    // }
-    
-    // let data = await Recipe.updateOne(
-    //     req.params,
-    //     {$set: req.body}
-    // );
-    
-    // res.send(data);
 
 })
 
@@ -105,6 +81,12 @@ app.delete('/delete/:id', async(req,res) => {
     const result = await Recipe.findByIdAndDelete(req.params.id);
     res.json(result);
 });
+
+//read static files
+app.use(express.static(path.join(__dirname, './client/build')))
+app.get('*', function(req, res){
+    res.sendFile(path.join(__dirname, './client/build/index.html'))
+})
 
 app.listen(5000, () => { 
     console.log("Server started on Port 5000") 
